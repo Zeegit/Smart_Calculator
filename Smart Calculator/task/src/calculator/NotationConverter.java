@@ -36,7 +36,7 @@ public class NotationConverter {
                 // 1
                 result.add(s);
             } else if (s.equals("(")) {
-                // 2
+                // 5
                 stack.push(s);
             } else if (s.equals(")")) {
                 // 6
@@ -57,6 +57,7 @@ public class NotationConverter {
             }
         }
         while (!stack.isEmpty()) {
+            // 7
             result.add(stack.pop());
         }
         return result;

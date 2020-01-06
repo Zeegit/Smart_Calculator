@@ -1,12 +1,10 @@
 package calculator;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class Calculator {
-    //String calcText;
-    String pattern = "^\\s*[-+]?(\\w+|((\\w+\\s*[\\+-=]\\s*)+\\w+))\\s*$";
-
     HashMap<String, String> map;
 
     public Calculator() {
@@ -22,11 +20,6 @@ public class Calculator {
                 .replaceAll("(\\+-)", "-")
                 .replaceAll("(-\\+)", "-");
     }
-
-    public boolean isValid(String calcText) {
-        return remove(calcText).matches(pattern);
-    }
-
 
     public int calc(String calcText) {
         calcText = remove(calcText);
@@ -142,35 +135,32 @@ public class Calculator {
 
             Когда выражение заканчивается, число на вершине стека является окончательным результатом.
              */
-            int op1 ;
-            int op2 ;
+            BigInteger op1;
+            BigInteger op2;
             for (String s : list) {
                 if (s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^")) {
                     if (!stack.isEmpty()) {
-                        op1 = Integer.parseInt(stack.pop());
+                        op1 = new BigInteger(stack.pop());
                     } else {
                         System.out.println("Invalid expression");
                         return exit;
                     }
                     if (!stack.isEmpty()) {
-                        op2 = Integer.parseInt(stack.pop());
+                        op2 = new BigInteger(stack.pop());
 
                     } else {
                         System.out.println("Invalid expression");
                         return exit;
                     }
-                    stack.push(Integer.toString(doOpertion(s, op1, op2)));
+                    stack.push(doOpertion(s, op1, op2).toString());
                 } else if (map.get(s.replaceAll("-", "")) != null) {
                     if (s.matches("\\-.*")) {
                         stack.push("-" + map.get(s.replaceAll("-", "")));
-                        //sum -= Integer.parseInt(map.get(s.replaceAll("-", "")));
                     } else {
                         stack.push(map.get(s.replaceAll("-", "")));
-                        // sum += Integer.parseInt(map.get(s.replaceAll("-", "")));
                     }
                 } else {
                     stack.push(s);
-                    //sum += Integer.parseInt(s);
                 }
             }
 
@@ -189,20 +179,20 @@ public class Calculator {
         return exit;
     }
 
-    private int doOpertion(String s, int op1, int op2) {
+    private BigInteger doOpertion(String s, BigInteger op1, BigInteger op2) {
         switch (s) {
             case "+":
-                return op1 + op2;
+                return op1.add(op2);
             case "-":
-                return op2 - op1;
+                return op2.subtract(op1);
             case "*":
-                return op1 * op2;
+                return op1.multiply(op2);
             case "/":
-                return op2 / op1;
+                return op2.divide(op1);
             case "^":
-                return (int) Math.pow(op2, op1);
+                return op2.pow(op1.intValue());
             default:
-                return 0;
+                return BigInteger.ZERO;
         }
     }
 }
